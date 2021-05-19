@@ -1,1 +1,28 @@
-export const theme = {};
+export const theme = {
+  dark: {
+    text: "rgb(255, 255, 255, .87)",
+    textSecondary: "rgba(255, 255, 255, .6)",
+    gray: "rgb(142, 142, 147)",
+    gray2: "rgb(99, 99, 102)",
+    gray3: "rgb(72, 72, 74)",
+    gray4: "rgb(58, 58, 60)",
+    gray5: "rgb(44, 44, 46)",
+    gray6: "rgb(28, 28, 30)",
+    blue: "rgb(10, 132, 255)",
+    red: "rgb(255, 69, 58)",
+    green: "rgb(48, 209, 88)",
+  },
+  light: {
+    text: "rgb(28, 28, 30)",
+    textSecondary: "rgba(28, 28, 30, .6)",
+    gray: "rgb(142, 142, 147)",
+    gray2: "rgb(174, 174, 178)",
+    gray3: "rgb(199, 199, 204)",
+    gray4: "rgb(209, 209, 214)",
+    gray5: "rgb(229, 229, 234)",
+    gray6: "rgb(242, 242, 247)",
+    blue: "rgb(10, 122, 255)",
+    red: "rgb(255, 59, 48)",
+    green: "rgb(52, 199, 89)",
+  },
+};
