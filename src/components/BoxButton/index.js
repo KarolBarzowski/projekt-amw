@@ -51,7 +51,7 @@ const StyledTrendingDownIcon = styled(TrendingDownIcon)`
 `;
 
 const StyledTrendingFlatIcon = styled(TrendingFlatIcon)`
-  fill: ${({ theme }) => theme.yellow};
+  fill: ${({ theme }) => theme.green};
   margin-right: 5px;
 `;
 

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const Paragraph = styled.nav`
+const Paragraph = styled.p`
   color: ${({ theme, secondary }) =>
     secondary ? theme.textSecondary : theme.text};
   font-size: 16px;
