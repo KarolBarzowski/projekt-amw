@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import BoxButton from "components/BoxButton";
 import Select from "components/Select";
+import DateSelect from "components/DateSelect";
 
 const Wrapper = styled.div`
   display: flex;
@@ -20,12 +21,12 @@ const Row = styled.div`
 `;
 
 const STATS = [
-  "Total Confirmed",
-  "New Confirmed",
-  "Total Deaths",
-  "New Deaths",
-  "Total Recovered",
-  "New Recovered",
+  // "Total Confirmed",
+  // "New Confirmed",
+  // "Total Deaths",
+  // "New Deaths",
+  // "Total Recovered",
+  // "New Recovered",
 ];
 
 function App() {
@@ -33,6 +34,10 @@ function App() {
   const [selectedStat, setSelectedStat] = useState(0);
   const [countries, setCountries] = useState([]);
   const [country, setCountry] = useState(null);
+  const [dateFrom, setDateFrom] = useState(
+    new Date(new Date().setDate(new Date().getDate() - 1))
+  );
+  const [dateTo, setDateTo] = useState(new Date());
 
   useEffect(() => {
     const requestOptions = {
@@ -46,32 +51,40 @@ function App() {
       .catch((error) => console.log("error", error));
   }, []);
 
-  useEffect(() => {
-    console.log(country);
-
-    const requestOptions = {
-      method: "GET",
-      redirect: "follow",
-    };
-
-    fetch(
-      country === null
-        ? `https://api.covid19api.com/summary`
-        : `https://api.covid19api.com/country/${country.Slug}`,
-      requestOptions
-    )
-      .then((response) => response.json())
-      .then((result) => setData(result))
-      .catch((error) => console.log("error", error));
-  }, [country]);
-
-  useEffect(() => {
-    console.log(data);
-  }, [data, country]);
+  // useEffect(() => {
+  //   console.log(country);
+  //
+  //   const requestOptions = {
+  //     method: "GET",
+  //     redirect: "follow",
+  //   };
+  //
+  //   fetch(
+  //     country === null
+  //       ? `https://api.covid19api.com/summary`
+  //       : `https://api.covid19api.com/country/${country.Slug}`,
+  //     requestOptions
+  //   )
+  //     .then((response) => response.json())
+  //     .then((result) => setData(result))
+  //     .catch((error) => console.log("error", error));
+  // }, [country]);
+  //
+  // useEffect(() => {
+  //   console.log(data);
+  // }, [data, country]);
 
   return (
     <Wrapper>
-      <Select data={countries} setCountry={setCountry} />
+      <Row>
+        <Select data={countries} setCountry={setCountry} />
+        <DateSelect
+          dateFrom={dateFrom}
+          dateTo={dateTo}
+          setDateTo={setDateTo}
+          setDateFrom={setDateFrom}
+        />
+      </Row>
       <Row>
         {STATS.map((text, i) => (
           <BoxButton

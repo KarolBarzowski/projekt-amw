@@ -118,12 +118,12 @@ const CountryBtn = styled.button`
 `;
 
 function Select({ data, setCountry }) {
-  const dropdownBtnRef = useRef(null);
+  const dropdownRef = useRef(null);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [query, setQuery] = useState("");
 
-  useOutsideClick(dropdownBtnRef, () => setIsDropdownOpen(false));
+  useOutsideClick(dropdownRef, () => setIsDropdownOpen(false));
 
   const handleChange = (e) => {
     setQuery(e.target.value);
@@ -140,7 +140,7 @@ function Select({ data, setCountry }) {
   };
 
   return (
-    <Wrapper>
+    <Wrapper ref={dropdownRef}>
       <Row>
         <Input
           type="text"
@@ -156,7 +156,7 @@ function Select({ data, setCountry }) {
           <StyledExpandIcon isExpanded={isDropdownOpen} />
         </DropdownBtn>
       </Row>
-      <Dropdown isOpen={isDropdownOpen} ref={dropdownBtnRef}>
+      <Dropdown isOpen={isDropdownOpen}>
         <List>
           {data
             .sort((a, b) => a.Country.localeCompare(b.Country))

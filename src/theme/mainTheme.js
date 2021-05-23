@@ -2,6 +2,7 @@ export const theme = {
   dark: {
     text: "rgb(255, 255, 255, .87)",
     textSecondary: "rgba(255, 255, 255, .6)",
+    disabled: "rgb(255, 255, 255, .38)",
     gray: "rgb(142, 142, 147)",
     gray2: "rgb(99, 99, 102)",
     gray3: "rgb(72, 72, 74)",
@@ -15,6 +16,7 @@ export const theme = {
   light: {
     text: "rgb(28, 28, 30)",
     textSecondary: "rgba(28, 28, 30, .6)",
+    disabled: "rgba(28, 28, 30, .38)",
     gray: "rgb(142, 142, 147)",
     gray2: "rgb(174, 174, 178)",
     gray3: "rgb(199, 199, 204)",
