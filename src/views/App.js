@@ -20,17 +20,10 @@ const Row = styled.div`
   align-items: center;
 `;
 
-const STATS = [
-  // "Total Confirmed",
-  // "New Confirmed",
-  // "Total Deaths",
-  // "New Deaths",
-  // "Total Recovered",
-  // "New Recovered",
-];
-
 function App() {
+  const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState({});
+  const [statistics, setStatistics] = useState({});
   const [selectedStat, setSelectedStat] = useState(0);
   const [countries, setCountries] = useState([]);
   const [country, setCountry] = useState(null);
@@ -51,28 +44,69 @@ function App() {
       .catch((error) => console.log("error", error));
   }, []);
 
-  // useEffect(() => {
-  //   console.log(country);
-  //
-  //   const requestOptions = {
-  //     method: "GET",
-  //     redirect: "follow",
-  //   };
-  //
-  //   fetch(
-  //     country === null
-  //       ? `https://api.covid19api.com/summary`
-  //       : `https://api.covid19api.com/country/${country.Slug}`,
-  //     requestOptions
-  //   )
-  //     .then((response) => response.json())
-  //     .then((result) => setData(result))
-  //     .catch((error) => console.log("error", error));
-  // }, [country]);
-  //
-  // useEffect(() => {
-  //   console.log(data);
-  // }, [data, country]);
+  useEffect(() => {
+    setIsLoading(true);
+
+    const fromQuery = `${dateFrom.getFullYear()}-${
+      dateFrom.getMonth() + 1
+    }-${dateFrom.getDate()}T00:00:00Z`;
+    const toQuery = `${dateTo.getFullYear()}-${
+      dateTo.getMonth() + 1
+    }-${dateTo.getDate()}T00:00:00Z`;
+
+    const requestOptions = {
+      method: "GET",
+      redirect: "follow",
+    };
+
+    fetch(
+      country === null
+        ? `https://api.covid19api.com/summary`
+        : `https://api.covid19api.com/country/${country.Slug}?from=${fromQuery}&to=${toQuery}`,
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        setData(result);
+      })
+      .catch((error) => console.log("error", error));
+  }, [country, dateFrom, dateTo]);
+
+  useEffect(() => {
+    console.log(country, "data:", data);
+    if (country !== null) {
+      const startData = data[0];
+      const endData = data[data.length - 1];
+
+      const {
+        Active: startActive,
+        Confirmed: startConfirmed,
+        Deaths: startDeaths,
+        Recovered: startRecovered,
+      } = startData;
+      const { Active, Confirmed, Deaths, Recovered } = endData;
+
+      setStatistics({
+        Active: {
+          Active,
+          diffActive: Active - startActive,
+        },
+        Confirmed: {
+          Confirmed,
+          diffConfirmed: Confirmed - startConfirmed,
+        },
+        Deaths: {
+          Deaths,
+          diffDeaths: Deaths - startDeaths,
+        },
+        Recovered: {
+          Recovered,
+          diffRecovered: Recovered - startRecovered,
+        },
+      });
+      setIsLoading(false);
+    }
+  }, [data]);
 
   return (
     <Wrapper>
@@ -85,19 +119,25 @@ function App() {
           setDateFrom={setDateFrom}
         />
       </Row>
-      <Row>
-        {STATS.map((text, i) => (
-          <BoxButton
-            key={text}
-            text={text}
-            value={100282}
-            handleSelect={() => setSelectedStat(i)}
-            active={selectedStat === i}
-            difference={1084}
-          />
-        ))}
-      </Row>
-      <div>charts</div>
+      {isLoading ? (
+        <div>loading</div>
+      ) : (
+        <>
+          <Row>
+            {Object.keys(statistics).map((objectKey, i) => (
+              <BoxButton
+                key={objectKey}
+                text={objectKey}
+                value={statistics[objectKey][objectKey]}
+                handleSelect={() => setSelectedStat(i)}
+                active={selectedStat === i}
+                difference={statistics[objectKey][`diff${objectKey}`]}
+              />
+            ))}
+          </Row>
+          <div>charts</div>
+        </>
+      )}
     </Wrapper>
   );
 }

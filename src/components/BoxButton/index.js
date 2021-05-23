@@ -41,17 +41,17 @@ const DifferenceParagraph = styled(Paragraph)`
 `;
 
 const StyledTrendingUpIcon = styled(TrendingUpIcon)`
-  fill: ${({ theme }) => theme.green};
+  fill: ${({ theme, reverse }) => (reverse ? theme.green : theme.red)};
   margin-right: 5px;
 `;
 
 const StyledTrendingDownIcon = styled(TrendingDownIcon)`
-  fill: ${({ theme }) => theme.red};
+  fill: ${({ theme, reverse }) => (reverse ? theme.red : theme.green)};
   margin-right: 5px;
 `;
 
 const StyledTrendingFlatIcon = styled(TrendingFlatIcon)`
-  fill: ${({ theme }) => theme.green};
+  fill: ${({ theme, reverse }) => (reverse ? theme.green : theme.red)};
   margin-right: 5px;
 `;
 
@@ -60,9 +60,15 @@ const BoxButton = ({ text, value, active, handleSelect, difference }) => (
     <Paragraph secondary>{text}</Paragraph>
     <ValueParagraph>{value}</ValueParagraph>
     <DifferenceParagraph secondary>
-      {difference === 0 ? <StyledTrendingFlatIcon /> : null}
-      {difference > 0 ? <StyledTrendingUpIcon /> : null}
-      {difference < 0 ? <StyledTrendingDownIcon /> : null}
+      {difference === 0 ? (
+        <StyledTrendingFlatIcon reverse={text === "Recovered"} />
+      ) : null}
+      {difference > 0 ? (
+        <StyledTrendingUpIcon reverse={text === "Recovered"} />
+      ) : null}
+      {difference < 0 ? (
+        <StyledTrendingDownIcon reverse={text === "Recovered"} />
+      ) : null}
       {difference > 0 ? "+" : null}
       {difference}
     </DifferenceParagraph>

@@ -85,7 +85,6 @@ function DateSelect({ dateFrom, dateTo, setDateFrom, setDateTo }) {
   useOutsideClick(dropdownRef, () => setIsDropdownOpen(false));
 
   useEffect(() => {
-    console.log("update", dateFrom, dateTo);
     const dF = dateFrom.getDate();
     const mF = monthsInYear[dateFrom.getMonth()];
     const yF = dateFrom.getFullYear();
