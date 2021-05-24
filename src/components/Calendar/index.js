@@ -185,6 +185,7 @@ function Calendar({ dateFrom, dateTo, setDateFrom, setDateTo }) {
     if (month === 2 && year === 2020) {
       setIsPrevMonth(false);
     } else setIsPrevMonth(true);
+    // eslint-disable-next-line
   }, [day, month, year, dateFrom, dateTo]);
 
   const handleMonthDown = () => {

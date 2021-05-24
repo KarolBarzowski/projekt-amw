@@ -29,7 +29,7 @@ const Row = styled.div`
 const Right = styled(Row)`
   position: absolute;
   top: 104px;
-  right: 0;
+  right: 25px;
 `;
 
 const LoadingWrapper = styled.div`
@@ -57,7 +57,7 @@ function App() {
   const [readonlyDate, setReadonlyDate] = useState(null);
   const [isError, setIsError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-  const [chartOptions, setChartOptions] = useState({
+  const [chartOptions] = useState({
     plugins: {
       legend: {
         display: false,
@@ -95,7 +95,7 @@ function App() {
       padding: 15,
     },
   });
-  const [graphStyles, setGraphStyles] = useState({
+  const [graphStyles] = useState({
     borderCapStyle: "round",
     borderColor: "rgb(10, 132, 255)",
     pointBorderWidth: 3,
@@ -330,6 +330,8 @@ function App() {
       setGraphData(dataObj);
       setIsLoading(false);
     }
+
+    // eslint-disable-next-line
   }, [data]);
 
   useEffect(() => {
@@ -364,7 +366,7 @@ function App() {
       ) : (
         <>
           <Row>
-            {Object.keys(statistics).map((objectKey, i) => (
+            {Object.keys(statistics).map((objectKey) => (
               <BoxButton
                 key={objectKey}
                 text={objectKey}
