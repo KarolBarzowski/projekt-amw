@@ -50,67 +50,47 @@ function App() {
       legend: {
         display: false,
       },
+      tooltip: {
+        titleColor: "rgba(255, 255, 255, .87)",
+        titleFont: { family: "Roboto, sans-serif", size: 21, weight: "500" },
+        bodyFont: { family: "Roboto, sans-serif", size: 21, weight: "400" },
+        bodyColor: "rgba(255, 255, 255, .6)",
+        padding: {
+          x: 6,
+          y: 6,
+        },
+        caretPadding: 15,
+        caretSize: 10,
+        cornerRadius: 10,
+        displayColors: false,
+        backgroundColor: "rgb(44, 44, 46)",
+      },
+    },
+    scales: {
+      x: {
+        grid: {
+          color: "rgb(44, 44, 46)",
+        },
+      },
+      y: {
+        grid: {
+          color: "rgb(44, 44, 46)",
+        },
+      },
     },
     maintainAspectRatio: false,
     layout: {
-      // padding: 15,
+      padding: 15,
     },
-    tooltips: {
-      titleFontFamily: "'Poppins', sans-serif",
-      titleFontSize: 16,
-      titleFontColor: "rgba(255, 255, 255, .87)",
-      titleFontStyle: "500",
-      bodyFontFamily: "'Poppins', sans-serif",
-      bodyFontSize: 16,
-      bodyFontColor: "rgba(255, 255, 255, .87)",
-      bodyFontStyle: "500",
-      footerFontFamily: "'Poppins', sans-serif",
-      footerFontSize: 16,
-      footerFontColor: "rgba(255, 255, 255, .87)",
-      footerFontStyle: "500",
-      yPadding: 10,
-      xPadding: 10,
-      titleMarginBottom: 2,
-      footerMarginTop: 2,
-      caretPadding: 15,
-      caretSize: 10,
-      cornerRadius: 10,
-      displayColors: false,
-      backgroundColor: "rgb(58, 58, 60)",
-    },
-    callbacks: {
-      // label: (tooltipItem) =>
-      // "graphList[tooltipItem.index].category",
-    },
-    // title: () => "",
-    //     labelTextColor: (tooltipItem) =>
-    //       getRGBColor(graphList[tooltipItem.index].color),
-    //     beforeFooter: (tooltipItem) =>
-    //       `Ocena ${graphList[tooltipItem[0].index].grade}\nWaga ${
-    //         graphList[tooltipItem[0].index].weight
-    //       }`,
-    //     footer: (tooltipItem) =>
-    //       graphList[tooltipItem[0].index].dateSyntax,
-    //     afterFooter: (tooltipItem) => {
-    //       const { categoryDesc, desc } =
-    //         graphList[tooltipItem[0].index];
-    //       let result = "";
-    //       if (categoryDesc.length) {
-    //         result += categoryDesc;
-    //       }
-    //
-    //       if (categoryDesc.length && desc.length) {
-    //         result += "\n";
-    //       }
-    //
-    //       if (desc.length) {
-    //         result += desc;
-    //       }
-    //
-    //       return result;
-    //     },
-    //   },
-    // },
+  });
+  const [graphStyles, setGraphStyles] = useState({
+    borderCapStyle: "round",
+    borderColor: "rgb(10, 132, 255)",
+    pointBorderWidth: 3,
+    pointHitRadius: 8,
+    pointRadius: 6,
+    pointHoverBorderWidth: 12,
+    backgroundColor: "rgb(28, 28, 30)",
   });
 
   useEffect(() => {
@@ -126,7 +106,6 @@ function App() {
   }, []);
 
   useEffect(() => {
-    console.log("asdsad");
     setIsLoading(true);
 
     const fromQuery = `${dateFrom.getFullYear()}-${
@@ -192,6 +171,7 @@ function App() {
           datasets: [
             {
               data: [],
+              ...graphStyles,
             },
           ],
         },
@@ -200,6 +180,7 @@ function App() {
           datasets: [
             {
               data: [],
+              ...graphStyles,
             },
           ],
         },
@@ -208,6 +189,7 @@ function App() {
           datasets: [
             {
               data: [],
+              ...graphStyles,
             },
           ],
         },
@@ -216,6 +198,7 @@ function App() {
           datasets: [
             {
               data: [],
+              ...graphStyles,
             },
           ],
         },
@@ -248,14 +231,7 @@ function App() {
           datasets: [
             {
               data: [],
-              fill: false,
-              borderCapStyle: "round",
-              borderColor: "rgba(75, 192, 192, 1)",
-              pointBackgroundColor: [],
-              pointBorderColor: [],
-              pointBorderWidth: 10,
-              pointHitRadius: 10,
-              pointHoverBorderWidth: 12,
+              ...graphStyles,
             },
           ],
         },
@@ -264,6 +240,7 @@ function App() {
           datasets: [
             {
               data: [],
+              ...graphStyles,
             },
           ],
         },
@@ -272,6 +249,7 @@ function App() {
           datasets: [
             {
               data: [],
+              ...graphStyles,
             },
           ],
         },
