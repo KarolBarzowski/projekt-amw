@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { Line } from "react-chartjs-2";
 import BoxButton from "components/BoxButton";
 import Select from "components/Select";
 import DateSelect from "components/DateSelect";
@@ -24,13 +25,14 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState({});
   const [statistics, setStatistics] = useState({});
-  const [selectedStat, setSelectedStat] = useState(0);
+  const [selectedStat, setSelectedStat] = useState("Active");
   const [countries, setCountries] = useState([]);
   const [country, setCountry] = useState(null);
   const [dateFrom, setDateFrom] = useState(
     new Date(new Date().setDate(new Date().getDate() - 1))
   );
   const [dateTo, setDateTo] = useState(new Date());
+  const [graphData, setGraphData] = useState({});
 
   useEffect(() => {
     const requestOptions = {
@@ -73,7 +75,6 @@ function App() {
   }, [country, dateFrom, dateTo]);
 
   useEffect(() => {
-    console.log(country, "data:", data);
     if (country !== null) {
       const startData = data[0];
       const endData = data[data.length - 1];
@@ -104,9 +105,63 @@ function App() {
           diffRecovered: Recovered - startRecovered,
         },
       });
+
+      const dataObj = {
+        Active: {
+          labels: [],
+          datasets: [
+            {
+              data: [],
+            },
+          ],
+        },
+        Confirmed: {
+          labels: [],
+          datasets: [
+            {
+              data: [],
+            },
+          ],
+        },
+        Deaths: {
+          labels: [],
+          datasets: [
+            {
+              data: [],
+            },
+          ],
+        },
+        Recovered: {
+          labels: [],
+          datasets: [
+            {
+              data: [],
+            },
+          ],
+        },
+      };
+
+      data.forEach((obj) => {
+        const { Active, Confirmed, Deaths, Recovered, Date } = obj;
+
+        dataObj.Active.labels.push(Date);
+        dataObj.Active.datasets[0].data.push(Active);
+
+        dataObj.Confirmed.labels.push(Date);
+        dataObj.Confirmed.datasets[0].data.push(Confirmed);
+
+        dataObj.Deaths.labels.push(Date);
+        dataObj.Deaths.datasets[0].data.push(Deaths);
+
+        dataObj.Recovered.labels.push(Date);
+        dataObj.Recovered.datasets[0].data.push(Recovered);
+      });
+
+      setGraphData(dataObj);
+
       setIsLoading(false);
     }
-  }, [data]);
+  }, [data, country]);
 
   return (
     <Wrapper>
@@ -129,13 +184,15 @@ function App() {
                 key={objectKey}
                 text={objectKey}
                 value={statistics[objectKey][objectKey]}
-                handleSelect={() => setSelectedStat(i)}
-                active={selectedStat === i}
+                handleSelect={() => setSelectedStat(objectKey)}
+                active={selectedStat === objectKey}
                 difference={statistics[objectKey][`diff${objectKey}`]}
               />
             ))}
           </Row>
-          <div>charts</div>
+          <div>
+            <Line data={graphData[selectedStat]} />
+          </div>
         </>
       )}
     </Wrapper>
