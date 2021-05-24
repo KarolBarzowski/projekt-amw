@@ -89,8 +89,8 @@ const Dropdown = styled.div`
 
 const StyledExpandIcon = styled(ExpandIcon)`
   fill: ${({ theme }) => theme.text};
-  transform: ${({ isExpanded }) =>
-    isExpanded ? "rotate(-180deg)" : "rotate(0)"};
+  transform: ${({ isexpanded }) =>
+    isexpanded ? "rotate(-180deg)" : "rotate(0)"};
   transition: transform 0.15s ease-in-out, fill 0.15s ease-in-out;
 `;
 
@@ -158,7 +158,7 @@ function Select({ data, setCountry }) {
           type="button"
           onClick={() => setIsDropdownOpen((prevState) => !prevState)}
         >
-          <StyledExpandIcon isExpanded={isDropdownOpen} />
+          <StyledExpandIcon isexpanded={isDropdownOpen ? 1 : 0} />
         </DropdownBtn>
       </Row>
       <Dropdown isOpen={isDropdownOpen}>

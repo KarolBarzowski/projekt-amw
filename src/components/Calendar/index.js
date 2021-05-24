@@ -101,6 +101,15 @@ const StyledInfo = styled(Paragraph)`
   margin-top: 10px;
 `;
 
+const Buttons = styled.div`
+  display: flex;
+  flex-flow: row wrap;
+
+  ${Day} {
+    margin: 5px;
+  }
+`;
+
 const monthsInYear = [
   "January",
   "February",
@@ -123,6 +132,12 @@ function Calendar({ dateFrom, dateTo, setDateFrom, setDateTo }) {
   const [year, setYear] = useState(new Date().getFullYear());
   const [isNextMonth, setIsNextMonth] = useState(false);
   const [isPrevMonth, setIsPrevMonth] = useState(true);
+  const [isTodayActive, setIsTodayActive] = useState(false);
+  const [isThisWeekActive, setIsThisWeekActive] = useState(false);
+  const [isThisMonthActive, setIsThisMonthActive] = useState(false);
+  const [isLast3MonthsActive, setIsLast3MonthsActive] = useState(false);
+  const [isThisYearActive, setIsThisYearActive] = useState(false);
+  const [isAllTimeActive, setIsAllTimeActive] = useState(false);
 
   useEffect(() => {
     let currentDateFrom = dateFrom.setHours(0, 0, 0, 0);
@@ -188,6 +203,85 @@ function Calendar({ dateFrom, dateTo, setDateFrom, setDateTo }) {
     // eslint-disable-next-line
   }, [day, month, year, dateFrom, dateTo]);
 
+  useEffect(() => {
+    const dateFromTs = dateFrom.setHours(0, 0, 0, 0);
+    const dateToTs = dateTo.setHours(0, 0, 0, 0);
+
+    const today = new Date().setHours(0, 0, 0, 0);
+    const yesterday = new Date(
+      new Date().setDate(new Date().getDate() - 1)
+    ).setHours(0, 0, 0, 0);
+    const lastWeek = new Date(today - 6 * 24 * 60 * 60 * 1000).getTime();
+    const lastMonth = new Date(
+      new Date().getFullYear(),
+      new Date().getMonth(),
+      1
+    ).getTime();
+    const last3Months = new Date();
+    last3Months.setDate(1);
+    last3Months.setMonth(last3Months.getMonth() - 2);
+    last3Months.setHours(0, 0, 0, 0);
+    const lastYear = new Date(new Date().getFullYear(), 0, 1).setHours(
+      0,
+      0,
+      0,
+      0
+    );
+    const allTime = new Date(2020, 2, 1).setHours(0, 0, 0, 0);
+
+    setIsTodayActive(dateFromTs === yesterday && dateToTs === today);
+    setIsThisWeekActive(dateFromTs === lastWeek && dateToTs === today);
+    setIsThisMonthActive(dateFromTs === lastMonth && dateToTs === today);
+    setIsLast3MonthsActive(
+      dateFromTs === last3Months.getTime() && dateToTs === today
+    );
+    setIsThisYearActive(dateFromTs === lastYear && dateToTs === today);
+    setIsAllTimeActive(dateFromTs === allTime && dateToTs === today);
+  }, [dateTo, dateFrom]);
+
+  const handleSetDate = (key) => {
+    const today = new Date();
+
+    switch (key) {
+      case "Today":
+        const yesterday = new Date(
+          new Date().setDate(new Date().getDate() - 1)
+        );
+        setDateFrom(yesterday);
+        setDateTo(today);
+        break;
+      case "This week":
+        const lastWeek = new Date(today.getTime() - 6 * 24 * 60 * 60 * 1000);
+        setDateFrom(lastWeek);
+        setDateTo(today);
+        break;
+      case "This month":
+        const lastMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+        setDateFrom(lastMonth);
+        setDateTo(today);
+        break;
+      case "Last 3 months":
+        const d = new Date();
+        d.setDate(1);
+        d.setMonth(d.getMonth() - 2);
+        setDateFrom(d);
+        setDateTo(today);
+        break;
+      case "This year":
+        const lastYear = new Date(today.getFullYear(), 0, 1);
+        setDateFrom(lastYear);
+        setDateTo(today);
+        break;
+      case "All time":
+        const allTime = new Date(2020, 2, 1);
+        setDateFrom(allTime);
+        setDateTo(today);
+        break;
+      default:
+        break;
+    }
+  };
+
   const handleMonthDown = () => {
     if (month === 0) {
       setMonth(11);
@@ -233,7 +327,55 @@ function Calendar({ dateFrom, dateTo, setDateFrom, setDateTo }) {
         <DayPlaceholder red>Sun</DayPlaceholder>
         {days}
       </DaysWrapper>
-      <StyledInfo secondary>Use both mouse buttons to specify date</StyledInfo>
+      <StyledInfo secondary>
+        Use both mouse buttons to specify date
+        <br />
+        Or try these
+      </StyledInfo>
+      <Buttons>
+        <Day
+          type="button"
+          selected={isTodayActive}
+          onClick={() => handleSetDate("Today")}
+        >
+          Today
+        </Day>
+        <Day
+          type="button"
+          selected={isThisWeekActive}
+          onClick={() => handleSetDate("This week")}
+        >
+          Last 7 days
+        </Day>
+        <Day
+          type="button"
+          selected={isThisMonthActive}
+          onClick={() => handleSetDate("This month")}
+        >
+          This month
+        </Day>
+        <Day
+          type="button"
+          selected={isLast3MonthsActive}
+          onClick={() => handleSetDate("Last 3 months")}
+        >
+          Last 3 months
+        </Day>
+        <Day
+          type="button"
+          selected={isThisYearActive}
+          onClick={() => handleSetDate("This year")}
+        >
+          This year
+        </Day>
+        <Day
+          type="button"
+          selected={isAllTimeActive}
+          onClick={() => handleSetDate("All time")}
+        >
+          All time
+        </Day>
+      </Buttons>
     </Container>
   );
 }

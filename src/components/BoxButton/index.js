@@ -70,13 +70,13 @@ const BoxButton = ({ text, value, active, handleSelect, difference }) => (
     </ValueParagraph>
     <DifferenceParagraph secondary>
       {difference === 0 ? (
-        <StyledTrendingFlatIcon reverse={text === "Recovered"} />
+        <StyledTrendingFlatIcon reverse={text === "Recovered" ? 1 : 0} />
       ) : null}
       {difference > 0 ? (
-        <StyledTrendingUpIcon reverse={text === "Recovered"} />
+        <StyledTrendingUpIcon reverse={text === "Recovered" ? 1 : 0} />
       ) : null}
       {difference < 0 ? (
-        <StyledTrendingDownIcon reverse={text === "Recovered"} />
+        <StyledTrendingDownIcon reverse={text === "Recovered" ? 1 : 0} />
       ) : null}
       {difference > 0 ? "+" : null}
       {difference
