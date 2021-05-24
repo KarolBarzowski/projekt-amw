@@ -16,14 +16,18 @@ const DateButton = styled.button`
   height: 40px;
   border: none;
   background-color: ${({ theme }) => theme.gray5};
-  padding: 0 0 0 10px;
+  padding: 0 10px;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.15s ease-in-out;
   outline: none;
 
-  :hover {
+  :hover:not(:disabled) {
     background-color: ${({ theme }) => theme.gray4};
+  }
+
+  :disabled {
+    cursor: default;
   }
 `;
 
@@ -76,11 +80,20 @@ const monthsInYear = [
   "December",
 ];
 
-function DateSelect({ dateFrom, dateTo, setDateFrom, setDateTo }) {
+function DateSelect({
+  dateFrom,
+  dateTo,
+  setDateFrom,
+  setDateTo,
+  isReadonly,
+  dateText,
+  setDateText,
+  readonlyDate,
+}) {
   const dropdownRef = useRef(null);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [displayText, setDisplayText] = useState("");
+  const [readonlyDateText, setReadonlyDateText] = useState("");
 
   useOutsideClick(dropdownRef, () => setIsDropdownOpen(false));
 
@@ -93,17 +106,30 @@ function DateSelect({ dateFrom, dateTo, setDateFrom, setDateTo }) {
     const mT = monthsInYear[dateTo.getMonth()];
     const yT = dateTo.getFullYear();
 
-    setDisplayText(`${dF} ${mF} ${yF} - ${dT} ${mT} ${yT}`);
+    setDateText(`${dF} ${mF} ${yF} - ${dT} ${mT} ${yT}`);
   }, [dateFrom, dateTo]);
+
+  useEffect(() => {
+    if (readonlyDate) {
+      const d = readonlyDate.getDate();
+      const m = monthsInYear[readonlyDate.getMonth()];
+      const y = readonlyDate.getFullYear();
+
+      setReadonlyDateText(`${d} ${m} ${y}`);
+    }
+  }, [readonlyDate]);
 
   return (
     <Wrapper ref={dropdownRef}>
       <DateButton
         type="button"
         onClick={() => setIsDropdownOpen((prevState) => !prevState)}
+        disabled={isReadonly}
       >
-        <StyledParagraph>{displayText}</StyledParagraph>
-        <StyledExpandIcon isExpanded={isDropdownOpen} />
+        <StyledParagraph>
+          {isReadonly ? readonlyDateText : dateText}
+        </StyledParagraph>
+        {!isReadonly ? <StyledExpandIcon isExpanded={isDropdownOpen} /> : null}
       </DateButton>
       <Dropdown isOpen={isDropdownOpen}>
         <Calendar

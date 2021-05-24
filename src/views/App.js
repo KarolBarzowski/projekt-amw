@@ -41,6 +41,9 @@ function App() {
   );
   const [dateTo, setDateTo] = useState(new Date());
   const [graphData, setGraphData] = useState({});
+  const [dateText, setDateText] = useState("");
+  const [isDateReadonly, setIsDateReadonly] = useState(true);
+  const [readonlyDate, setReadonlyDate] = useState(null);
 
   useEffect(() => {
     const requestOptions = {
@@ -167,9 +170,9 @@ function App() {
 
       setGraphData(dataObj);
 
+      setIsDateReadonly(false);
       setIsLoading(false);
     } else if (data.Global) {
-      console.log(data);
       const {
         NewConfirmed,
         TotalConfirmed,
@@ -178,7 +181,7 @@ function App() {
         NewRecovered,
         TotalRecovered,
       } = data.Global;
-      const { Date } = data;
+      const { Date: date } = data;
 
       setStatistics({
         Confirmed: {
@@ -195,6 +198,8 @@ function App() {
         },
       });
 
+      setReadonlyDate(new Date(date));
+      setIsDateReadonly(true);
       setIsLoading(false);
     }
   }, [data]);
@@ -208,6 +213,10 @@ function App() {
           dateTo={dateTo}
           setDateTo={setDateTo}
           setDateFrom={setDateFrom}
+          dateText={dateText}
+          setDateText={setDateText}
+          isReadonly={isDateReadonly}
+          readonlyDate={readonlyDate}
         />
       </Row>
       {isLoading ? (

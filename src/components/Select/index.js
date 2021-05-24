@@ -135,8 +135,13 @@ function Select({ data, setCountry }) {
 
   const handleSelectCountry = ({ Country, Slug, ISO2 }) => {
     setIsDropdownOpen(false);
-    setQuery(Country);
-    setCountry({ Country, Slug, ISO2 });
+    if (Country === null) {
+      setQuery("World");
+      setCountry(null);
+    } else {
+      setQuery(Country);
+      setCountry({ Country, Slug, ISO2 });
+    }
   };
 
   return (
@@ -158,6 +163,16 @@ function Select({ data, setCountry }) {
       </Row>
       <Dropdown isOpen={isDropdownOpen}>
         <List>
+          <ListItem>
+            <CountryBtn
+              type="button"
+              onClick={() =>
+                handleSelectCountry({ Country: null, Slug: null, ISO2: null })
+              }
+            >
+              <Paragraph>World</Paragraph>
+            </CountryBtn>
+          </ListItem>
           {data
             .sort((a, b) => a.Country.localeCompare(b.Country))
             .filter(({ Country }) =>
