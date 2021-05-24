@@ -8,7 +8,7 @@ import { ReactComponent as TrendingDownIcon } from "assets/trending_down.svg";
 const Wrapper = styled.button`
   display: flex;
   flex-flow: column nowrap;
-  width: 233px;
+  min-width: 233px;
   background-color: transparent;
   padding: 13px;
   outline: none;
@@ -58,7 +58,12 @@ const StyledTrendingFlatIcon = styled(TrendingFlatIcon)`
 const BoxButton = ({ text, value, active, handleSelect, difference }) => (
   <Wrapper type="button" active={active} onClick={handleSelect}>
     <Paragraph secondary>{text}</Paragraph>
-    <ValueParagraph>{value}</ValueParagraph>
+    <ValueParagraph>
+      {value
+        .toString()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+        .trim()}
+    </ValueParagraph>
     <DifferenceParagraph secondary>
       {difference === 0 ? (
         <StyledTrendingFlatIcon reverse={text === "Recovered"} />
@@ -70,7 +75,10 @@ const BoxButton = ({ text, value, active, handleSelect, difference }) => (
         <StyledTrendingDownIcon reverse={text === "Recovered"} />
       ) : null}
       {difference > 0 ? "+" : null}
-      {difference}
+      {difference
+        .toString()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+        .trim()}
     </DifferenceParagraph>
   </Wrapper>
 );

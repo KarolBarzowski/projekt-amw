@@ -189,7 +189,7 @@ function App() {
 
       setIsLoading(false);
     }
-  }, [data, country]);
+  }, [data]);
 
   return (
     <Wrapper>
