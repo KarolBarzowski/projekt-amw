@@ -4,11 +4,12 @@ import { Line } from "react-chartjs-2";
 import BoxButton from "components/BoxButton";
 import Select from "components/Select";
 import DateSelect from "components/DateSelect";
+import Loading from "components/Loading";
 
 const Wrapper = styled.div`
   display: flex;
   flex-flow: column nowrap;
-  min-height: 100vh;
+  height: 100vh;
   width: 100%;
   padding: 104px 15px 15px;
   background-color: ${({ theme }) => theme.gray6};
@@ -19,6 +20,13 @@ const Row = styled.div`
   display: flex;
   flex-flow: row wrap;
   align-items: center;
+`;
+
+const LoadingWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
 `;
 
 function App() {
@@ -203,7 +211,9 @@ function App() {
         />
       </Row>
       {isLoading ? (
-        <div>loading</div>
+        <LoadingWrapper>
+          <Loading />
+        </LoadingWrapper>
       ) : (
         <>
           <Row>
