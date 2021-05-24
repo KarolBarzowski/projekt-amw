@@ -160,6 +160,34 @@ function App() {
       setGraphData(dataObj);
 
       setIsLoading(false);
+    } else if (data.Global) {
+      console.log(data);
+      const {
+        NewConfirmed,
+        TotalConfirmed,
+        NewDeaths,
+        TotalDeaths,
+        NewRecovered,
+        TotalRecovered,
+      } = data.Global;
+      const { Date } = data;
+
+      setStatistics({
+        Confirmed: {
+          Confirmed: TotalConfirmed,
+          diffConfirmed: NewConfirmed,
+        },
+        Deaths: {
+          Deaths: TotalDeaths,
+          diffDeaths: NewDeaths,
+        },
+        Recovered: {
+          Recovered: TotalRecovered,
+          diffRecovered: NewRecovered,
+        },
+      });
+
+      setIsLoading(false);
     }
   }, [data, country]);
 
