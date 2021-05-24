@@ -99,32 +99,31 @@ function DateSelect({
   useOutsideClick(dropdownRef, () => setIsDropdownOpen(false));
 
   useEffect(() => {
-    const dF = dateFrom.getDate();
-    const mF = monthsInYear[dateFrom.getMonth()];
-    const yF = dateFrom.getFullYear();
+    let fromDate, toDate;
 
-    const dT = dateTo.getDate();
-    const mT = monthsInYear[dateTo.getMonth()];
-    const yT = dateTo.getFullYear();
+    if (readonlyDate) [fromDate, toDate] = readonlyDate;
+    if (dateFrom) fromDate = dateFrom;
+    if (dateTo) toDate = dateTo;
 
-    setDateText(`${dF} ${mF} ${yF} - ${dT} ${mT} ${yT}`);
-  }, [dateFrom, dateTo]);
+    console.log(fromDate, toDate);
 
-  useEffect(() => {
-    if (readonlyDate) {
-      let txt = "";
+    const fromDay = fromDate.getDate();
+    const fromMonth = monthsInYear[fromDate.getMonth()];
+    const fromYear = fromDate.getFullYear();
 
-      readonlyDate.forEach((date, i) => {
-        const d = date.getDate();
-        const m = monthsInYear[date.getMonth()];
-        const y = date.getFullYear();
+    const toDay = toDate.getDate();
+    const toMonth = monthsInYear[toDate.getMonth()];
+    const toYear = toDate.getFullYear();
 
-        txt += `${d} ${m} ${y}${i === 0 ? " - " : ""}`;
-      });
+    const isSameMonth = fromMonth === toMonth && fromYear === toYear;
 
-      setReadonlyDateText(txt);
-    }
-  }, [readonlyDate]);
+    const value = `${fromDay}${isSameMonth ? "" : ` ${fromMonth}`}${
+      isSameMonth ? "" : fromYear === toYear ? "" : ` ${fromYear}`
+    } - ${toDay} ${toMonth} ${toYear}`;
+
+    setReadonlyDateText(value);
+    setDateText(value);
+  }, [readonlyDate, dateFrom, dateTo, setDateText]);
 
   return (
     <Wrapper ref={dropdownRef}>
