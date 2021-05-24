@@ -16,7 +16,7 @@ const Wrapper = styled.button`
   border-radius: 13px;
   border: 2px solid
     ${({ theme, active }) => (active ? theme.blue : theme.gray4)};
-  margin: 10px;
+  margin: 0 10px;
   transition: border 0.15s ease-in-out, background-color 0.15s ease-in-out;
 
   :hover {

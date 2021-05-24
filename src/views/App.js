@@ -23,7 +23,13 @@ const Wrapper = styled.div`
 const Row = styled.div`
   display: flex;
   flex-flow: row wrap;
-  align-items: center;
+  align-items: flex-start;
+`;
+
+const Right = styled(Row)`
+  position: absolute;
+  top: 104px;
+  right: 0;
 `;
 
 const LoadingWrapper = styled.div`
@@ -334,7 +340,7 @@ function App() {
 
   return (
     <Wrapper>
-      <Row>
+      <Right>
         <Select data={countries} setCountry={setCountry} />
         <DateSelect
           dateFrom={dateFrom}
@@ -346,7 +352,7 @@ function App() {
           isReadonly={isDateReadonly}
           readonlyDate={readonlyDate}
         />
-      </Row>
+      </Right>
       {isLoading ? (
         <LoadingWrapper>
           <Loading />

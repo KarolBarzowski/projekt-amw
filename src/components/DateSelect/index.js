@@ -3,10 +3,11 @@ import styled, { css } from "styled-components";
 import Calendar from "components/Calendar";
 import Paragraph from "components/Paragraph";
 import { ReactComponent as ExpandIcon } from "assets/expand.svg";
-import { useOutsideClick } from "../../hooks/useOutsideClick";
+import { useOutsideClick } from "hooks/useOutsideClick";
 
 const Wrapper = styled.div`
   position: relative;
+  margin-left: 25px;
 `;
 
 const DateButton = styled.button`
