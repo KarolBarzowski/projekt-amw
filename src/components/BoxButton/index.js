@@ -55,9 +55,13 @@ const StyledTrendingFlatIcon = styled(TrendingFlatIcon)`
   margin-right: 5px;
 `;
 
+const StyledParagraph = styled(Paragraph)`
+  color: ${({ theme, active }) => (active ? theme.blue : theme.textSecondary)};
+`;
+
 const BoxButton = ({ text, value, active, handleSelect, difference }) => (
   <Wrapper type="button" active={active} onClick={handleSelect}>
-    <Paragraph secondary>{text}</Paragraph>
+    <StyledParagraph active={active}>{text}</StyledParagraph>
     <ValueParagraph>
       {value
         .toString()

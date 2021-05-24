@@ -17,6 +17,7 @@ const Wrapper = styled.nav`
   width: 100%;
   padding: 13px;
   background-color: ${({ theme }) => theme.gray5};
+  z-index: 9999;
   transition: background-color 0.15s ease-in-out;
 `;
 

@@ -5,15 +5,18 @@ import BoxButton from "components/BoxButton";
 import Select from "components/Select";
 import DateSelect from "components/DateSelect";
 import Loading from "components/Loading";
+import Heading from "components/Heading";
 import { makeReadableDate } from "helpers/functions";
 
 const Wrapper = styled.div`
+  position: relative;
   display: flex;
   flex-flow: column nowrap;
   min-height: 100vh;
   width: 100%;
   padding: 104px 15px 15px;
   background-color: ${({ theme }) => theme.gray6};
+  overflow-x: hidden;
   transition: background-color 0.15s ease-in-out;
 `;
 
@@ -27,7 +30,8 @@ const LoadingWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100%;
+  height: calc(100vh - 104px);
+  width: 100%;
 `;
 
 function App() {
@@ -45,6 +49,8 @@ function App() {
   const [dateText, setDateText] = useState("");
   const [isDateReadonly, setIsDateReadonly] = useState(true);
   const [readonlyDate, setReadonlyDate] = useState(null);
+  const [isError, setIsError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
   const [chartOptions, setChartOptions] = useState({
     plugins: {
       legend: {
@@ -135,95 +141,103 @@ function App() {
 
   useEffect(() => {
     if (country !== null) {
-      const startData = data[0];
-      const endData = data[data.length - 1];
+      if (data.length) {
+        const startData = data[0];
+        const endData = data[data.length - 1];
 
-      const {
-        Active: startActive,
-        Confirmed: startConfirmed,
-        Deaths: startDeaths,
-        Recovered: startRecovered,
-      } = startData;
-      const { Active, Confirmed, Deaths, Recovered } = endData;
+        const {
+          Active: startActive,
+          Confirmed: startConfirmed,
+          Deaths: startDeaths,
+          Recovered: startRecovered,
+        } = startData;
+        const { Active, Confirmed, Deaths, Recovered } = endData;
 
-      setStatistics({
-        Active: {
-          Active,
-          diffActive: Active - startActive,
-        },
-        Confirmed: {
-          Confirmed,
-          diffConfirmed: Confirmed - startConfirmed,
-        },
-        Deaths: {
-          Deaths,
-          diffDeaths: Deaths - startDeaths,
-        },
-        Recovered: {
-          Recovered,
-          diffRecovered: Recovered - startRecovered,
-        },
-      });
+        setStatistics({
+          Active: {
+            Active,
+            diffActive: Active - startActive,
+          },
+          Confirmed: {
+            Confirmed,
+            diffConfirmed: Confirmed - startConfirmed,
+          },
+          Deaths: {
+            Deaths,
+            diffDeaths: Deaths - startDeaths,
+          },
+          Recovered: {
+            Recovered,
+            diffRecovered: Recovered - startRecovered,
+          },
+        });
 
-      const dataObj = {
-        Active: {
-          labels: [],
-          datasets: [
-            {
-              data: [],
-              ...graphStyles,
-            },
-          ],
-        },
-        Confirmed: {
-          labels: [],
-          datasets: [
-            {
-              data: [],
-              ...graphStyles,
-            },
-          ],
-        },
-        Deaths: {
-          labels: [],
-          datasets: [
-            {
-              data: [],
-              ...graphStyles,
-            },
-          ],
-        },
-        Recovered: {
-          labels: [],
-          datasets: [
-            {
-              data: [],
-              ...graphStyles,
-            },
-          ],
-        },
-      };
+        const dataObj = {
+          Active: {
+            labels: [],
+            datasets: [
+              {
+                data: [],
+                ...graphStyles,
+              },
+            ],
+          },
+          Confirmed: {
+            labels: [],
+            datasets: [
+              {
+                data: [],
+                ...graphStyles,
+              },
+            ],
+          },
+          Deaths: {
+            labels: [],
+            datasets: [
+              {
+                data: [],
+                ...graphStyles,
+              },
+            ],
+          },
+          Recovered: {
+            labels: [],
+            datasets: [
+              {
+                data: [],
+                ...graphStyles,
+              },
+            ],
+          },
+        };
 
-      data.forEach((obj) => {
-        const { Active, Confirmed, Deaths, Recovered, Date } = obj;
+        data.forEach((obj) => {
+          const { Active, Confirmed, Deaths, Recovered, Date } = obj;
 
-        dataObj.Active.labels.push(makeReadableDate(Date));
-        dataObj.Active.datasets[0].data.push(Active);
+          dataObj.Active.labels.push(makeReadableDate(Date));
+          dataObj.Active.datasets[0].data.push(Active);
 
-        dataObj.Confirmed.labels.push(makeReadableDate(Date));
-        dataObj.Confirmed.datasets[0].data.push(Confirmed);
+          dataObj.Confirmed.labels.push(makeReadableDate(Date));
+          dataObj.Confirmed.datasets[0].data.push(Confirmed);
 
-        dataObj.Deaths.labels.push(makeReadableDate(Date));
-        dataObj.Deaths.datasets[0].data.push(Deaths);
+          dataObj.Deaths.labels.push(makeReadableDate(Date));
+          dataObj.Deaths.datasets[0].data.push(Deaths);
 
-        dataObj.Recovered.labels.push(makeReadableDate(Date));
-        dataObj.Recovered.datasets[0].data.push(Recovered);
-      });
+          dataObj.Recovered.labels.push(makeReadableDate(Date));
+          dataObj.Recovered.datasets[0].data.push(Recovered);
+        });
 
-      setGraphData(dataObj);
+        setGraphData(dataObj);
 
-      setIsDateReadonly(false);
-      setIsLoading(false);
+        setIsError(false);
+        setIsLoading(false);
+        setIsDateReadonly(false);
+        setIsLoading(false);
+      } else {
+        setErrorMsg("Sorry, we don't have statistics for this country 😢");
+        setIsError(true);
+        setIsLoading(false);
+      }
     } else if (data.length) {
       const dataObj = {
         Confirmed: {
@@ -303,6 +317,8 @@ function App() {
         },
       });
 
+      setIsError(false);
+      setIsLoading(false);
       setReadonlyDate([new Date(fromDate), new Date(toDate)]);
       setIsDateReadonly(true);
       setGraphData(dataObj);
@@ -334,6 +350,10 @@ function App() {
       {isLoading ? (
         <LoadingWrapper>
           <Loading />
+        </LoadingWrapper>
+      ) : isError ? (
+        <LoadingWrapper>
+          <Heading big>{errorMsg}</Heading>
         </LoadingWrapper>
       ) : (
         <>

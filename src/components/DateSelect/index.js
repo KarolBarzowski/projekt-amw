@@ -101,11 +101,9 @@ function DateSelect({
   useEffect(() => {
     let fromDate, toDate;
 
-    if (readonlyDate) [fromDate, toDate] = readonlyDate;
     if (dateFrom) fromDate = dateFrom;
     if (dateTo) toDate = dateTo;
-
-    console.log(fromDate, toDate);
+    if (readonlyDate && isReadonly) [fromDate, toDate] = readonlyDate;
 
     const fromDay = fromDate.getDate();
     const fromMonth = monthsInYear[fromDate.getMonth()];
@@ -123,7 +121,7 @@ function DateSelect({
 
     setReadonlyDateText(value);
     setDateText(value);
-  }, [readonlyDate, dateFrom, dateTo, setDateText]);
+  }, [readonlyDate, dateFrom, dateTo, setDateText, isReadonly]);
 
   return (
     <Wrapper ref={dropdownRef}>
