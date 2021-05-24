@@ -74,7 +74,7 @@ function App() {
 
     fetch(
       country === null
-        ? `https://api.covid19api.com/summary`
+        ? `https://api.covid19api.com/world`
         : `https://api.covid19api.com/country/${country.Slug}?from=${fromQuery}&to=${toQuery}`,
       requestOptions
     )
@@ -172,37 +172,92 @@ function App() {
 
       setIsDateReadonly(false);
       setIsLoading(false);
-    } else if (data.Global) {
+    } else if (data.length) {
+      const dataObj = {
+        Confirmed: {
+          labels: [],
+          datasets: [
+            {
+              data: [],
+            },
+          ],
+        },
+        Deaths: {
+          labels: [],
+          datasets: [
+            {
+              data: [],
+            },
+          ],
+        },
+        Recovered: {
+          labels: [],
+          datasets: [
+            {
+              data: [],
+            },
+          ],
+        },
+      };
+
+      const sortedData = data.sort(
+        (a, b) => new Date(a.Date) - new Date(b.Date)
+      );
+
+      sortedData.forEach((item) => {
+        const { TotalConfirmed, TotalDeaths, TotalRecovered, Date } = item;
+
+        dataObj.Confirmed.labels.push(Date);
+        dataObj.Confirmed.datasets[0].data.push(TotalConfirmed);
+
+        dataObj.Deaths.labels.push(Date);
+        dataObj.Deaths.datasets[0].data.push(TotalDeaths);
+
+        dataObj.Recovered.labels.push(Date);
+        dataObj.Recovered.datasets[0].data.push(TotalRecovered);
+      });
+
+      const startData = sortedData[sortedData.length - 2];
+      const endData = sortedData[sortedData.length - 1];
+
       const {
-        NewConfirmed,
-        TotalConfirmed,
-        NewDeaths,
-        TotalDeaths,
-        NewRecovered,
-        TotalRecovered,
-      } = data.Global;
-      const { Date: date } = data;
+        TotalConfirmed: startConfirmed,
+        TotalDeaths: startDeaths,
+        TotalRecovered: startRecovered,
+      } = startData;
+      const {
+        TotalConfirmed: Confirmed,
+        TotalDeaths: Deaths,
+        TotalRecovered: Recovered,
+        Date: date,
+      } = endData;
 
       setStatistics({
         Confirmed: {
-          Confirmed: TotalConfirmed,
-          diffConfirmed: NewConfirmed,
+          Confirmed: Confirmed,
+          diffConfirmed: Confirmed - startConfirmed,
         },
         Deaths: {
-          Deaths: TotalDeaths,
-          diffDeaths: NewDeaths,
+          Deaths: Deaths,
+          diffDeaths: Deaths - startDeaths,
         },
         Recovered: {
-          Recovered: TotalRecovered,
-          diffRecovered: NewRecovered,
+          Recovered: Recovered,
+          diffRecovered: Recovered - startRecovered,
         },
       });
-
       setReadonlyDate(new Date(date));
       setIsDateReadonly(true);
+      setGraphData(dataObj);
       setIsLoading(false);
     }
   }, [data]);
+
+  useEffect(() => {
+    if (country === null && selectedStat === "Active") {
+      setSelectedStat("Confirmed");
+    }
+  }, [country, selectedStat]);
 
   return (
     <Wrapper>
