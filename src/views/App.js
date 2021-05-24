@@ -5,6 +5,7 @@ import BoxButton from "components/BoxButton";
 import Select from "components/Select";
 import DateSelect from "components/DateSelect";
 import Loading from "components/Loading";
+import { makeReadableDate } from "helpers/functions";
 
 const Wrapper = styled.div`
   display: flex;
@@ -223,16 +224,16 @@ function App() {
       data.forEach((obj) => {
         const { Active, Confirmed, Deaths, Recovered, Date } = obj;
 
-        dataObj.Active.labels.push(Date);
+        dataObj.Active.labels.push(makeReadableDate(Date));
         dataObj.Active.datasets[0].data.push(Active);
 
-        dataObj.Confirmed.labels.push(Date);
+        dataObj.Confirmed.labels.push(makeReadableDate(Date));
         dataObj.Confirmed.datasets[0].data.push(Confirmed);
 
-        dataObj.Deaths.labels.push(Date);
+        dataObj.Deaths.labels.push(makeReadableDate(Date));
         dataObj.Deaths.datasets[0].data.push(Deaths);
 
-        dataObj.Recovered.labels.push(Date);
+        dataObj.Recovered.labels.push(makeReadableDate(Date));
         dataObj.Recovered.datasets[0].data.push(Recovered);
       });
 
@@ -283,13 +284,13 @@ function App() {
       sortedData.forEach((item) => {
         const { TotalConfirmed, TotalDeaths, TotalRecovered, Date } = item;
 
-        dataObj.Confirmed.labels.push(Date);
+        dataObj.Confirmed.labels.push(makeReadableDate(Date));
         dataObj.Confirmed.datasets[0].data.push(TotalConfirmed);
 
-        dataObj.Deaths.labels.push(Date);
+        dataObj.Deaths.labels.push(makeReadableDate(Date));
         dataObj.Deaths.datasets[0].data.push(TotalDeaths);
 
-        dataObj.Recovered.labels.push(Date);
+        dataObj.Recovered.labels.push(makeReadableDate(Date));
         dataObj.Recovered.datasets[0].data.push(TotalRecovered);
       });
 
