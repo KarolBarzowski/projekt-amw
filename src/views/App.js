@@ -9,7 +9,7 @@ import Loading from "components/Loading";
 const Wrapper = styled.div`
   display: flex;
   flex-flow: column nowrap;
-  height: 100vh;
+  min-height: 100vh;
   width: 100%;
   padding: 104px 15px 15px;
   background-color: ${({ theme }) => theme.gray6};
@@ -44,6 +44,73 @@ function App() {
   const [dateText, setDateText] = useState("");
   const [isDateReadonly, setIsDateReadonly] = useState(true);
   const [readonlyDate, setReadonlyDate] = useState(null);
+  const [chartOptions, setChartOptions] = useState({
+    plugins: {
+      legend: {
+        display: false,
+      },
+    },
+    maintainAspectRatio: false,
+    layout: {
+      // padding: 15,
+    },
+    tooltips: {
+      titleFontFamily: "'Poppins', sans-serif",
+      titleFontSize: 16,
+      titleFontColor: "rgba(255, 255, 255, .87)",
+      titleFontStyle: "500",
+      bodyFontFamily: "'Poppins', sans-serif",
+      bodyFontSize: 16,
+      bodyFontColor: "rgba(255, 255, 255, .87)",
+      bodyFontStyle: "500",
+      footerFontFamily: "'Poppins', sans-serif",
+      footerFontSize: 16,
+      footerFontColor: "rgba(255, 255, 255, .87)",
+      footerFontStyle: "500",
+      yPadding: 10,
+      xPadding: 10,
+      titleMarginBottom: 2,
+      footerMarginTop: 2,
+      caretPadding: 15,
+      caretSize: 10,
+      cornerRadius: 10,
+      displayColors: false,
+      backgroundColor: "rgb(58, 58, 60)",
+    },
+    callbacks: {
+      // label: (tooltipItem) =>
+      // "graphList[tooltipItem.index].category",
+    },
+    // title: () => "",
+    //     labelTextColor: (tooltipItem) =>
+    //       getRGBColor(graphList[tooltipItem.index].color),
+    //     beforeFooter: (tooltipItem) =>
+    //       `Ocena ${graphList[tooltipItem[0].index].grade}\nWaga ${
+    //         graphList[tooltipItem[0].index].weight
+    //       }`,
+    //     footer: (tooltipItem) =>
+    //       graphList[tooltipItem[0].index].dateSyntax,
+    //     afterFooter: (tooltipItem) => {
+    //       const { categoryDesc, desc } =
+    //         graphList[tooltipItem[0].index];
+    //       let result = "";
+    //       if (categoryDesc.length) {
+    //         result += categoryDesc;
+    //       }
+    //
+    //       if (categoryDesc.length && desc.length) {
+    //         result += "\n";
+    //       }
+    //
+    //       if (desc.length) {
+    //         result += desc;
+    //       }
+    //
+    //       return result;
+    //     },
+    //   },
+    // },
+  });
 
   useEffect(() => {
     const requestOptions = {
@@ -58,6 +125,7 @@ function App() {
   }, []);
 
   useEffect(() => {
+    console.log("asdsad");
     setIsLoading(true);
 
     const fromQuery = `${dateFrom.getFullYear()}-${
@@ -179,6 +247,14 @@ function App() {
           datasets: [
             {
               data: [],
+              fill: false,
+              borderCapStyle: "round",
+              borderColor: "rgba(75, 192, 192, 1)",
+              pointBackgroundColor: [],
+              pointBorderColor: [],
+              pointBorderWidth: 10,
+              pointHitRadius: 10,
+              pointHoverBorderWidth: 12,
             },
           ],
         },
@@ -224,12 +300,13 @@ function App() {
         TotalConfirmed: startConfirmed,
         TotalDeaths: startDeaths,
         TotalRecovered: startRecovered,
+        Date: fromDate,
       } = startData;
       const {
         TotalConfirmed: Confirmed,
         TotalDeaths: Deaths,
         TotalRecovered: Recovered,
-        Date: date,
+        Date: toDate,
       } = endData;
 
       setStatistics({
@@ -246,7 +323,8 @@ function App() {
           diffRecovered: Recovered - startRecovered,
         },
       });
-      setReadonlyDate(new Date(date));
+
+      setReadonlyDate([new Date(fromDate), new Date(toDate)]);
       setIsDateReadonly(true);
       setGraphData(dataObj);
       setIsLoading(false);
@@ -293,7 +371,11 @@ function App() {
             ))}
           </Row>
           <div>
-            <Line data={graphData[selectedStat]} />
+            <Line
+              data={graphData[selectedStat]}
+              height={600}
+              options={chartOptions}
+            />
           </div>
         </>
       )}

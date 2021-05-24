@@ -37,6 +37,7 @@ const StyledParagraph = styled(Paragraph)`
 
 const StyledExpandIcon = styled(ExpandIcon)`
   fill: ${({ theme }) => theme.text};
+  margin-right: -10px;
   transform: ${({ isExpanded }) =>
     isExpanded ? "rotate(-180deg)" : "rotate(0)"};
   transition: transform 0.15s ease-in-out, fill 0.15s ease-in-out;
@@ -111,11 +112,17 @@ function DateSelect({
 
   useEffect(() => {
     if (readonlyDate) {
-      const d = readonlyDate.getDate();
-      const m = monthsInYear[readonlyDate.getMonth()];
-      const y = readonlyDate.getFullYear();
+      let txt = "";
 
-      setReadonlyDateText(`${d} ${m} ${y}`);
+      readonlyDate.forEach((date, i) => {
+        const d = date.getDate();
+        const m = monthsInYear[date.getMonth()];
+        const y = date.getFullYear();
+
+        txt += `${d} ${m} ${y}${i === 0 ? " - " : ""}`;
+      });
+
+      setReadonlyDateText(txt);
     }
   }, [readonlyDate]);
 
